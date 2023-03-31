@@ -32,70 +32,46 @@ static NodePtr createNode(int key, NodePtr p) {
 
 // Constructors
 LLSortedPosInt::LLSortedPosInt() {
-	this->head = nullptr;
+	this->head = createNode(HEAD_OF_LIST, nullptr);
 }
 
-LLSortedPosInt::LLSortedPosInt(int key) {
-	// create the sentinal Node at the head of the list
-
+LLSortedPosInt::LLSortedPosInt(int key) : LLSortedPosInt() {
 	// add the single element key, as long as it is positive
 	if (key > 0) {
-		this->head = createNode(key, nullptr);
-	}
-	else {
-		this->head = nullptr;
+		this->insert(key);
 	}
 }
 
-LLSortedPosInt::LLSortedPosInt(int* keys, int n) {
-	// create the sentinal node at the head of the list
+LLSortedPosInt::LLSortedPosInt(int* keys, int n) : LLSortedPosInt() {
 
-	this->head = createNode(0, nullptr);
-
-	// add new Nodes for each positive value in keys
-	int counter = 0;
-	while (keys[counter] <= 0 && counter < n) {
-		counter++;
-	}
-	if (counter >= n) {
-		return;
-	}
-	for (int i = counter; i < n; i++) {
+	for (int i = 0; i < n; i++) {
 		if (keys[i] > 0) {
-			insert(keys[i]);
+			this->insert(keys[i]);
 		}
 	}
-	NodePtr nodeToDelete = this->head;
-	this->head = this->head->next;
-	delete nodeToDelete;
 }
 
-LLSortedPosInt::LLSortedPosInt(const LLSortedPosInt& l) {
+LLSortedPosInt::LLSortedPosInt(const LLSortedPosInt& l) : LLSortedPosInt() {
 	// create a deep copy of the input list l
 
-	if (l.head == nullptr) {
-		this->head = nullptr;
+	if (l.head == nullptr || l.head->next == nullptr) {
 		return;
 	}
 
-	this->head = createNode(l.head->key, nullptr);
 	NodePtr currentNode = l.head->next;
-	NodePtr currentInternalNode = this->head;
 	while (currentNode != nullptr) {
-		currentInternalNode->next = createNode(currentNode->key, nullptr);
+		this->insert(currentNode->key);
 		currentNode = currentNode->next;
-		currentInternalNode = currentInternalNode->next;
 	}
 }
 
 // Destructor
 LLSortedPosInt::~LLSortedPosInt() {
-	NodePtr currentNode = this->head;
-	NodePtr nextNode = nullptr;
-	while (nextNode != nullptr) {
-		nextNode = currentNode->next;
-		delete currentNode;
-		currentNode = nextNode;
+	NodePtr toDelete = this->head;
+	while (this->head != nullptr) {
+		toDelete = this->head;
+		this->head = this->head->next;
+		delete toDelete;
 	}
 }
 
@@ -109,11 +85,18 @@ LLSortedPosInt& LLSortedPosInt::operator=
 
 	// free old elements of the list before the new elements from l are assigned
 	this->~LLSortedPosInt();
+
 	// if necessary, rebuild the sentinal
+	if (this->head == nullptr || this->head->key != -1) {
+		this->head = createNode(HEAD_OF_LIST, nullptr);
+	}
 
 	// build the list as a deep copy of l
-	LLSortedPosInt ll = LLSortedPosInt(l);
-	this->head = ll.head;
+	NodePtr currentNode = l.head->next;
+	while (currentNode != nullptr) {
+		this->insert(currentNode->key);
+		currentNode = currentNode->next;
+	}
 
 	// return *this
 	return *this;
@@ -131,7 +114,7 @@ ostream& operator<<  (ostream& out, const LLSortedPosInt& l) {
 	std::cout << "<";
 
 	// print the keys in the list l
-	NodePtr currentNode = l.head;
+	NodePtr currentNode = l.head->next;
 	if (currentNode != nullptr) {
 		std::cout << currentNode->key;
 		currentNode = currentNode->next;
@@ -150,7 +133,7 @@ ostream& operator<<  (ostream& out, const LLSortedPosInt& l) {
 // Boolean Functions
 bool LLSortedPosInt::isEmpty() const {
 	// return true if only the sentinal is in the list; return false otherwise
-	if (this->head == nullptr) {
+	if (this->head == nullptr || this->head->next == nullptr) {
 		return true;
 	}
 	return false;
@@ -173,16 +156,21 @@ bool LLSortedPosInt::operator==(const LLSortedPosInt& l) const {
 	// compare the Nodes in *this with the Nodes in l
 	// if all Node key values in *this match the cooresponding
 	//  Node key values in l, then the lists are equivalent
-	NodePtr currentNode = this->head;
-	NodePtr currentExternalNode = l.head;
-	while (currentNode != nullptr) {
+	NodePtr currentNode = this->head->next;
+	NodePtr currentExternalNode = l.head->next;
+	while (currentNode != nullptr && currentExternalNode != nullptr) {
 		if (currentNode->key != currentExternalNode->key) {
 			return false;
 		}
 		currentNode = currentNode->next;
 		currentExternalNode = currentExternalNode->next;
 	}
-	return true;
+	if (currentNode == nullptr && currentExternalNode == nullptr) {
+		return true;
+	}
+	else {
+		return false;
+	}
 }
 
 bool LLSortedPosInt::operator!=(const LLSortedPosInt& l) const {
@@ -196,7 +184,7 @@ LLSortedPosInt  operator+ (const LLSortedPosInt& l1,
 	// create a copy of l1 and add each element of l2 to it in 
 	// the correct (sorted ascending) order, allow duplicates
 	LLSortedPosInt sum = l1;
-	NodePtr currentNode = l2.head;
+	NodePtr currentNode = l2.head->next;
 	while (currentNode != nullptr) {
 		sum.insert(currentNode->key);
 		currentNode = currentNode->next;

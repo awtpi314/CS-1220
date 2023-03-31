@@ -1,36 +1,83 @@
-#include <iostream>
-#include <fstream>
-#include <string>
+#include "Plant.h"
+#include "Flower.h"
 #include <vector>
+#include <string>
+#include <iostream>
 
-char base64[] = {
-    'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H',
-    'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P',
-    'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X',
-    'Y', 'Z', 'a', 'b', 'c', 'd', 'e', 'f',
-    'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n',
-    'o', 'p', 'q', 'r', 's', 't', 'u', 'v',
-    'w', 'x', 'y', 'z', '0', '1', '2', '3',
-    '4', '5', '6', '7', '8', '9', ' ', '.' };
+using namespace std;
 
-int main(int argc, char const* argv[])
-{
-    std::ifstream inputFile = std::ifstream("CU_steg.bmp", std::ios::binary);
-    std::vector<unsigned char> buffer(std::istreambuf_iterator<char>(inputFile), {});
+void PrintVector(vector<Plant*> v) {
+    for (Plant* plant : v) {
+        plant->PrintInfo();
+    }
+}
 
-    std::string message = "";
-    for (int i = 0; i < 44 * 6; i++)
-    {
-        message += std::to_string(buffer.at(0x2710 + i * 100) & 0b1);
+// TODO: Define a PrintVector function that prints an vector of plant (or flower) object pointers
+
+int main() {
+    // TODO: Declare a vector called myGarden that can hold object of type plant pointer
+    vector<Plant*> myGarden;
+
+    // TODO: Declare variables - plantName, plantCost, flowerName, flowerCost,
+    //       colorOfFlowers, isAnnual
+    string input;
+    string plantName;
+    int plantCost;
+    string flowerName;
+    int flowerCost;
+    string colorOfFlowers;
+    string isAnnual;
+
+    cin >> input;
+
+    while (input != "-1") {
+        if (input != "flower") {
+            cin >> plantName;
+            cin >> plantCost;
+
+            Plant* p = new Plant();
+            p->SetPlantName(plantName);
+            p->SetPlantCost(plantCost);
+            myGarden.push_back(p);
+        }
+        else {
+            //string inputLine;
+            //std::getline(cin, inputLine);
+            //int location = inputLine.find(" ", 2);
+            //flowerName = inputLine.substr(1, location - 1);
+            //inputLine = inputLine.substr(location + 1);
+            //location = inputLine.find(" ");
+            //flowerCost = std::stoi(inputLine.substr(0, location));
+            //inputLine = inputLine.substr(location + 1);
+            //location = inputLine.find(" ");
+            //isAnnual = inputLine.substr(0, location) == "true";
+            //inputLine = inputLine.substr(location + 1);
+            //location = inputLine.find(" ");
+            //colorOfFlowers = inputLine.substr(0, location);
+            cin >> flowerName;
+            cin >> flowerCost;
+            cin >> isAnnual;
+            cin >> colorOfFlowers;
+
+            Flower* f = new Flower();
+            f->SetPlantName(flowerName);
+            f->SetPlantCost(flowerCost);
+            f->SetColorOfFlowers(colorOfFlowers);
+            f->SetPlantType(isAnnual == "true");
+            myGarden.push_back(f);
+        }
+        // TODO: Check if input is a plant or flower
+        //       Store as a plant object or flower object
+        //       Add to the vector myGarden
+        cin >> input;
     }
 
-    std::string decodedMessage = "";
-    for (int i = 0; i < 44; i++)
-    {
-        decodedMessage += base64[std::stoi(message.substr(i * 6, 6), nullptr, 2)];
-    }
+    // TODO: Call the method PrintVector to print myGarden
+    PrintVector(myGarden);
 
-    std::cout << "Decoded message: " << decodedMessage << std::endl;
+    for (size_t i = 0; i < myGarden.size(); ++i) {
+        delete myGarden.at(i);
+    }
 
     return 0;
 }

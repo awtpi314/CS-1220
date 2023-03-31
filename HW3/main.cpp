@@ -8,6 +8,7 @@
 #include <cstring>
 #include <algorithm>
 #include "LLSortedPosInt.h"
+#include "../crtdbg.h"
 using namespace std;
 
 #define NUM_LISTS 5

@@ -15,22 +15,28 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="driver.cpp">
+    <ClCompile Include="wxWidgetsApp.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Plant.cpp">
+    <ClCompile Include="GUIClass.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Flower.cpp">
+    <ClCompile Include="SubGUIClass.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Plant.h">
+    <ClInclude Include="GUIClass.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Flower.h">
+    <ClInclude Include="SubGUIClass.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="wxWidgetsApp.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="cpp.hint" />
   </ItemGroup>
 </Project>
