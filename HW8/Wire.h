@@ -23,6 +23,16 @@ public:
 
 	void setValue(WireValue v);
 	void setName(std::string n);
+	void setDrives(std::vector<Gate*> d);
+
+	WireValue getValue() const;
+	std::string getName() const;
+	std::vector<Gate*> getDrives() const;
+	int getIndex() const;
+	std::vector<WireValue> getHistory() const;
+
+	void printHistory() const;
+
 
 private:
 	WireValue value;
