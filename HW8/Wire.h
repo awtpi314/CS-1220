@@ -8,6 +8,8 @@
 
 #include "Gate.h"
 
+using namespace std;
+
 enum WireValue 
 {
 	OFF,
