@@ -35,6 +35,8 @@ private:
 	Wire* input2;
 	Wire* output;
 	int gateDelay;
+
+	WireValue evaluate(GateType g) const;
 };
 
 #endif // !GATE_H

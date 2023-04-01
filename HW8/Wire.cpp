@@ -2,42 +2,45 @@
 
 #include "Wire.h"
 
+using namespace std;
+
 Wire::Wire(
-	std::string n, 
+	string n, 
 	int i, 
-	WireValue v = UNKNOWN, 
-	std::vector<Gate*> d = std::vector<Gate*>()
+	WireValue v//, 
+	//vector<Gate*> d = vector<Gate*>()
 )
 {
 	this->value = v;
 	this->name = n;
-	this->drives = d;
+	//this->drives = d;
 	this->index = i;
-	this->history = std::vector<WireValue>();
+	this->history = vector<WireValue>();
 }
 
 Wire::~Wire()
 {
-	for (auto gate : drives) 
-	{
-		delete gate;
-	}
+	//for (auto gate : drives) 
+	//{
+	//	delete gate;
+	//}
 }
 
 void Wire::setValue(WireValue v)
 {
+	this->setHistory(this->value);
 	this->value = v;
 }
 
-void Wire::setName(std::string n)
+void Wire::setHistory(WireValue h)
 {
-	this->name = n;
+	this->history.push_back(h);
 }
 
-void Wire::setDrives(std::vector<Gate*> d)
-{
-	this->drives = d;
-}
+//void Wire::setDrives(vector<Gate*> d)
+//{
+//	this->drives = d;
+//}
 
 WireValue Wire::getValue() const
 {
@@ -49,10 +52,10 @@ std::string Wire::getName() const
 	return this->name;
 }
 
-std::vector<Gate*> Wire::getDrives() const
-{
-	return this->drives;
-}
+//std::vector<Gate*> Wire::getDrives() const
+//{
+//	return this->drives;
+//}
 
 int Wire::getIndex() const
 {
@@ -66,20 +69,20 @@ std::vector<WireValue> Wire::getHistory() const
 
 void Wire::printHistory() const
 {
-	std::cout << this->name << "\t";
+	cout << this->name << "\t";
 	for (auto dataPoint : this->history) {
 		switch (dataPoint)
 		{
 		case ON:
-			std::cout << "-";
+			cout << "-";
 			break;
 		case OFF:
-			std::cout << "_";
+			cout << "_";
 			break;
 		default:
-			std::cout << "X";
+			cout << "X";
 			break;
 		}
 	}
-	std::cout << std::endl;
+	cout << endl;
 }

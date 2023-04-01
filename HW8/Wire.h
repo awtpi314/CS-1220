@@ -6,8 +6,6 @@
 #include <string>
 #include <vector>
 
-#include "Gate.h"
-
 using namespace std;
 
 enum WireValue 
@@ -20,28 +18,27 @@ enum WireValue
 class Wire
 {
 public:
-	Wire(std::string n, int i, WireValue v = UNKNOWN, std::vector<Gate*> d = std::vector<Gate*>());
+	Wire(string n, int i, WireValue v = UNKNOWN/*, vector<Gate*> d = vector<Gate*>()*/);
 	~Wire();
 
 	void setValue(WireValue v);
-	void setName(std::string n);
-	void setDrives(std::vector<Gate*> d);
+	void setHistory(WireValue h);
+	//void setDrives(vector<Gate*> d);
 
 	WireValue getValue() const;
-	std::string getName() const;
-	std::vector<Gate*> getDrives() const;
+	string getName() const;
 	int getIndex() const;
-	std::vector<WireValue> getHistory() const;
+	vector<WireValue> getHistory() const;
 
 	void printHistory() const;
 
 
 private:
 	WireValue value;
-	std::string name;
-	std::vector<Gate*> drives;
+	string name;
+	//vector<Gate*> drives;
 	int index;
-	std::vector<WireValue> history;
+	vector<WireValue> history;
 };
 
 #endif // !WIRE_H
