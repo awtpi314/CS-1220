@@ -22,14 +22,17 @@ Wire::~Wire()
 {
 }
 
-void Wire::setValue(WireValue v)
+void Wire::setValue(WireValue v, int t)
 {
-	this->setHistory(this->value);
+	this->setHistory(v, t);
 	this->value = v;
 }
 
-void Wire::setHistory(WireValue h)
+void Wire::setHistory(WireValue h, int t)
 {
+	if (this->history.size() < t) {
+		this->history.resize(t, this->value);
+	}
 	this->history.push_back(h);
 }
 

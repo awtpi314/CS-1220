@@ -23,8 +23,8 @@ public:
 	Wire(int i, string n = "", WireValue v = UNKNOWN, vector<Gate*> d = vector<Gate*>());
 	~Wire();
 
-	void setValue(WireValue v);
-	void setHistory(WireValue h);
+	void setValue(WireValue v, int t = -1);
+	void setHistory(WireValue h, int t = -1);
 	void addGate(Gate* d);
 
 	WireValue getValue() const;

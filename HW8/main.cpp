@@ -18,9 +18,9 @@ string fmtOut(WireValue w) {
 
 int main(int argc, char* argv[])
 {
-	Wire* w1 = new Wire("A", 1, UNKNOWN);
-	Wire* w2 = new Wire("B", 2, UNKNOWN);
-	Wire* w3 = new Wire("C", 3);
+	/*Wire* w1 = new Wire(1, "A", UNKNOWN);
+	Wire* w2 = new Wire(2, "B", UNKNOWN);
+	Wire* w3 = new Wire(3, "C");
 
 	for (int g = 0; g < 7; g++){
 		string gName;
@@ -61,5 +61,10 @@ int main(int argc, char* argv[])
 		}
 		cout << endl;
 		cout.flush();
-	}
+	}*/
+
+	Wire* w4 = new Wire(4, "D");
+	w4->setValue(OFF, 5);
+	w4->setValue(ON, 10);
+	w4->printHistory();
 }
