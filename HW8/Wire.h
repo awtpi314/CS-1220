@@ -15,19 +15,22 @@ enum WireValue
 	UNKNOWN
 };
 
+class Gate;
+
 class Wire
 {
 public:
-	Wire(string n, int i, WireValue v = UNKNOWN/*, vector<Gate*> d = vector<Gate*>()*/);
+	Wire(int i, string n = "", WireValue v = UNKNOWN, vector<Gate*> d = vector<Gate*>());
 	~Wire();
 
 	void setValue(WireValue v);
 	void setHistory(WireValue h);
-	//void setDrives(vector<Gate*> d);
+	void addGate(Gate* d);
 
 	WireValue getValue() const;
 	string getName() const;
 	int getIndex() const;
+	vector<Gate*> getDrives() const;
 	vector<WireValue> getHistory() const;
 
 	void printHistory() const;
@@ -36,7 +39,7 @@ public:
 private:
 	WireValue value;
 	string name;
-	//vector<Gate*> drives;
+	vector<Gate*> drives;
 	int index;
 	vector<WireValue> history;
 };

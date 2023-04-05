@@ -56,7 +56,7 @@ int main(int argc, char* argv[])
 				w2->setValue((WireValue)i2);
 				cout << "(" << fmtOut((WireValue)i1) << ", " << fmtOut((WireValue)i2) << ")";
 				Gate* iLikeYoCutG = new Gate((GateType)g, 3, w3, w1, w2);
-				cout << " -> " << fmtOut((WireValue)(iLikeYoCutG->evaluate())) << endl;
+				cout << " -> " << fmtOut(iLikeYoCutG->evaluate()) << endl;
 			}
 		}
 		cout << endl;

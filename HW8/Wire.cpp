@@ -5,25 +5,21 @@
 using namespace std;
 
 Wire::Wire(
-	string n, 
 	int i, 
-	WireValue v//, 
-	//vector<Gate*> d = vector<Gate*>()
+	string n, 
+	WireValue v, 
+	vector<Gate*> d
 )
 {
 	this->value = v;
 	this->name = n;
-	//this->drives = d;
+	this->drives = d;
 	this->index = i;
 	this->history = vector<WireValue>();
 }
 
 Wire::~Wire()
 {
-	//for (auto gate : drives) 
-	//{
-	//	delete gate;
-	//}
 }
 
 void Wire::setValue(WireValue v)
@@ -37,10 +33,10 @@ void Wire::setHistory(WireValue h)
 	this->history.push_back(h);
 }
 
-//void Wire::setDrives(vector<Gate*> d)
-//{
-//	this->drives = d;
-//}
+void Wire::addGate(Gate* d)
+{
+	this->drives.push_back(d);
+}
 
 WireValue Wire::getValue() const
 {
@@ -52,10 +48,10 @@ std::string Wire::getName() const
 	return this->name;
 }
 
-//std::vector<Gate*> Wire::getDrives() const
-//{
-//	return this->drives;
-//}
+std::vector<Gate*> Wire::getDrives() const
+{
+	return this->drives;
+}
 
 int Wire::getIndex() const
 {
