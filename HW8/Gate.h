@@ -7,6 +7,8 @@
 
 #include "Wire.h"
 
+using namespace std;
+
 enum GateType {
 	AND,
 	OR,
