@@ -9,6 +9,8 @@
 
 using namespace std;
 
+#define STR_TO_GATE(s) s=="AND" ? AND : s=="OR" ? OR : s== "NOT" ? NOT : s=="XOR" ? XOR : s=="NAND" ? NAND : s=="NOR" ? NOR : XNOR
+
 enum GateType {
 	AND,
 	OR,

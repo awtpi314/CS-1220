@@ -62,12 +62,12 @@ void testGateStates(Wire* w1, Wire* w2, Wire* w3) {
 	}
 }
 
-void readInCircuit(ifstream& f) {
+Circuit* readInCircuit(Circuit* mainCircuit, ifstream& f) {
 	string currentLine;
 	getline(f, currentLine);
 	string circuitName = currentLine.substr(currentLine.find(" ") + 1);
 
-	Circuit* mainCircuit = new Circuit(circuitName);
+	mainCircuit->setCircuitName(circuitName);
 
 	while (getline(f, currentLine))
 	{
@@ -91,13 +91,68 @@ void readInCircuit(ifstream& f) {
 			iss >> inputWire;
 			int outputWire;
 			iss >> outputWire;
+
+			if (mainCircuit->getWire(outputWire) == nullptr)
+			{
+				mainCircuit->setWire(outputWire, new Wire(outputWire));
+			}
+
+			Gate* newGate = new Gate(STR_TO_GATE(type), stoi(delay), mainCircuit->getWire(outputWire), mainCircuit->getWire(inputWire));
+			mainCircuit->addGate(newGate);
+			mainCircuit->getWire(inputWire)->addGate(newGate);
+		}
+		else
+		{
+			string delay;
+			iss >> delay;
+			int inputWire1;
+			iss >> inputWire1;
+			int inputWire2;
+			iss >> inputWire2;
+			int outputWire;
+			iss >> outputWire;
+
+			if (mainCircuit->getWire(outputWire) == nullptr)
+			{
+				mainCircuit->setWire(outputWire, new Wire(outputWire));
+			}
+
+			Gate* newGate = new Gate(STR_TO_GATE(type), stoi(delay), mainCircuit->getWire(outputWire), mainCircuit->getWire(inputWire1), mainCircuit->getWire(inputWire2));
+			mainCircuit->addGate(newGate);
+			mainCircuit->getWire(inputWire1)->addGate(newGate);
+			mainCircuit->getWire(inputWire2)->addGate(newGate);
 		}
 	}
+
+	return mainCircuit;
+}
+
+Circuit* readInVector(Circuit* mainCircuit, ifstream& inFS)
+{
+	string currentLine;
+	getline(inFS, currentLine);
+
+	while (getline(inFS, currentLine))
+	{
+		istringstream iss(currentLine);
+		string wireName;
+		iss >> wireName;
+		iss >> wireName;
+
+		int time;
+		iss >> time;
+		int value;
+		iss >> value;
+
+		Event e = Event(time, (WireValue)value, mainCircuit->getWire(wireName));
+		mainCircuit->addEvent(e);
+	}
+
+	return mainCircuit;
 }
 
 int main(int argc, char* argv[])
 {
-	ifstream inFS;
 	string circuitFileName;
 	string vectorFileName;
 
@@ -122,25 +177,39 @@ int main(int argc, char* argv[])
 		exit(1);
 	}
 
+	ifstream circuitFile(circuitFileName);
+	
+	Circuit* mainCircuit = new Circuit();
+	readInCircuit(mainCircuit, circuitFile);
 
-	inFS.open(circuitFileName);
-	if (inFS.is_open()) {
-		cerr << "haha looser u didn t work right" << endl;
-		exit(1);
+	circuitFile.close();
+
+
+	ifstream vectorFile(vectorFileName);
+
+	readInVector(mainCircuit, vectorFile);
+
+	while (mainCircuit->hasEvent()) 
+	{
+		Event e = mainCircuit->getNextEvent();
+		if (e.getTime() > 100) break;
+		e.print();
+		Wire* wireToChange = e.getWire();
+		wireToChange->setValue((WireValue)e.getValue(), e.getTime());
+		vector<Gate*> gates = wireToChange->getDrives();
+		for (auto g : gates) 
+		{
+			WireValue previous = g->getOutput()->getValue();
+			WireValue next = g->evaluate();
+			if (previous != next)
+			{
+				Event newEvent = Event(e.getTime() + g->getDelay(), next, g->getOutput());
+				mainCircuit->addEvent(newEvent);
+			}
+		}
 	}
 
+	mainCircuit->printWires();
 
-	// perform operations
-
-	inFS.close();
-
-	inFS.open(vectorFileName);
-	if (inFS.is_open()) {
-		cerr << "haha looser thother one didn t work right bro" << endl;
-		exit(1);
-	}
-
-	// perform even more magnanimous operations
-
-	inFS.close();
+	vectorFile.close();
 }
