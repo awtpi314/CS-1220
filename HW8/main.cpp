@@ -73,6 +73,7 @@ Circuit* readInCircuit(Circuit* mainCircuit, ifstream& f) {
 
 	while (getline(f, currentLine))
 	{
+		if (currentLine.length() == 0) break;
 		istringstream iss(currentLine);
 		string type;
 		iss >> type;
@@ -136,6 +137,7 @@ Circuit* readInVector(Circuit* mainCircuit, ifstream& inFS)
 
 	while (getline(inFS, currentLine))
 	{
+		if (currentLine.length() == 0) break;
 		istringstream iss(currentLine);
 		string wireName;
 		iss >> wireName;
@@ -143,11 +145,21 @@ Circuit* readInVector(Circuit* mainCircuit, ifstream& inFS)
 
 		int time;
 		iss >> time;
-		int value;
-		iss >> value;
+		string stringValue;
+		iss >> stringValue;
 
-		Event e = Event(time, (WireValue)value, mainCircuit->getWire(wireName), mainCircuit->getEventCount());
-		mainCircuit->addEvent(e);
+		WireValue value;
+		if (stringValue == "X") 
+		{
+			value = UNKNOWN;
+		}
+		else
+		{
+			value = (WireValue)std::stoi(stringValue);
+		}
+
+		Event e = Event(time, value, mainCircuit->getWire(wireName), mainCircuit->getEventCount());
+		mainCircuit->addEvent(e, true);
 	}
 
 	return mainCircuit;
@@ -167,8 +179,8 @@ int main(int argc, char* argv[])
 	{
 		cout << "Enter the path to the circuit file: ";
 		cin >> circuitFileName;
-		cout << "Enter the path to the vector file: ";
-		cin >> vectorFileName;
+		vectorFileName = circuitFileName + "_v.txt";
+		circuitFileName += ".txt";
 	}
 	else
 	{
@@ -179,52 +191,71 @@ int main(int argc, char* argv[])
 		exit(1);
 	}
 
-	ifstream circuitFile(circuitFileName);
-
-	Circuit* mainCircuit = new Circuit();
-	readInCircuit(mainCircuit, circuitFile);
-
-	circuitFile.close();
-
-
-	ifstream vectorFile(vectorFileName);
-
-	readInVector(mainCircuit, vectorFile);
-
-	COORD coord;
-	coord.X = 0;
-	coord.Y = 4;
-
-	COORD coord2;
-	coord2.X = 0;
-	coord2.Y = 10;
-
-	while (mainCircuit->hasEvent())
+	while (circuitFileName != ".txt") 
 	{
+		ifstream circuitFile(circuitFileName);
+
+		Circuit* mainCircuit = new Circuit();
+		readInCircuit(mainCircuit, circuitFile);
+
+		circuitFile.close();
+
+
+		ifstream vectorFile(vectorFileName);
+
+		readInVector(mainCircuit, vectorFile);
+
+		vectorFile.close();
+
+		COORD coord;
+		coord.X = 0;
+		coord.Y = 4;
+
+		COORD coord2;
+		coord2.X = 0;
+		coord2.Y = 10;
+
+		while (mainCircuit->hasEvent())
+		{
+			system("CLS");
+			Event e = mainCircuit->getNextEvent();
+			if (e.getTime() > 60) break;
+			Wire* wireToChange = e.getWire();
+			wireToChange->setValue((WireValue)e.getValue(), e.getTime());
+			SetConsoleCursorPosition(GetStdHandle(STD_OUTPUT_HANDLE), coord);
+			mainCircuit->printWires();
+			vector<Gate*> gates = wireToChange->getDrives();
+			for (auto g : gates)
+			{
+				WireValue previous = g->getOutput()->getValue();
+				WireValue next = g->evaluate();
+				Event newEvent = Event(e.getTime() + g->getDelay(), next, g->getOutput(), mainCircuit->getEventCount());
+
+				SetConsoleCursorPosition(GetStdHandle(STD_OUTPUT_HANDLE), coord2);
+				e.print();
+				cout << " -> ";
+
+				if (mainCircuit->addEvent(newEvent))
+				{
+					newEvent.print();
+				}
+				cout << endl;
+			}
+		}
+
 		SetConsoleCursorPosition(GetStdHandle(STD_OUTPUT_HANDLE), coord);
 		mainCircuit->printWires();
-		Event e = mainCircuit->getNextEvent();
-		if (e.getTime() > 100) break;
-		Wire* wireToChange = e.getWire();
-		wireToChange->setValue((WireValue)e.getValue(), e.getTime());
-		vector<Gate*> gates = wireToChange->getDrives();
-		for (auto g : gates)
-		{
-			WireValue previous = g->getOutput()->getValue();
-			WireValue next = g->evaluate();
-			Event newEvent = Event(e.getTime() + g->getDelay(), next, g->getOutput(), mainCircuit->getEventCount());
-			mainCircuit->addEvent(newEvent);
 
-			SetConsoleCursorPosition(GetStdHandle(STD_OUTPUT_HANDLE), coord2);
-			e.print();
-			cout << " -> ";
-			newEvent.print();
-			cout << endl;
-		}
+		system("PAUSE");
+		system("CLS");
+		COORD origin;
+		origin.X = 0;
+		origin.Y = 0;
+		SetConsoleCursorPosition(GetStdHandle(STD_OUTPUT_HANDLE), origin);
+
+		cout << "Enter the path to the circuit file: ";
+		cin >> circuitFileName;
+		vectorFileName = circuitFileName + "_v.txt";
+		circuitFileName += ".txt";
 	}
-
-	SetConsoleCursorPosition(GetStdHandle(STD_OUTPUT_HANDLE), coord);
-	mainCircuit->printWires();
-
-	vectorFile.close();
 }

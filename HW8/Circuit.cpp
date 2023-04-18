@@ -25,9 +25,12 @@ string Circuit::getCircuitName() const
 
 Event Circuit::getNextEvent()
 {
-	Event retVal = this->events.top();
+	Event e = this->events.back();
+	this->events.pop_back();
+	return e;
+	/*Event retVal = this->events.top();
 	this->events.pop();
-	return retVal;
+	return retVal;*/
 }
 
 Wire* Circuit::getWire(size_t n) const
@@ -66,10 +69,47 @@ void Circuit::setCircuitName(string newName)
 	this->name = newName;
 }
 
-void Circuit::addEvent(Event& newEvent)
+bool Circuit::addEvent(Event& newEvent, bool justAdd)
 {
-	this->events.push(newEvent);
+	if (!justAdd)
+	{
+		int location;
+		WireValue lastKnownValue = newEvent.getWire()->getValue();
+		for (location = this->events.size() - 1; location >= 0 && this->events.at(location).getTime() <= newEvent.getTime(); location--)
+		{
+			if (this->events.at(location).getWire()->getIndex() == newEvent.getWire()->getIndex())
+			{
+				lastKnownValue = this->events.at(location).getValue();
+				continue;
+			}
+			if (this->events.at(location) == newEvent ||
+				(this->events.at(location).getTime() == newEvent.getTime() - 1 &&
+					this->events.at(location).getValue() == newEvent.getValue() &&
+					this->events.at(location).getWire()->getIndex() == newEvent.getWire()->getIndex()))
+			{
+				break;
+			}
+		}
+
+		if (lastKnownValue == newEvent.getValue()) return false;
+		if (location >= 0 && this->events.at(location).getTime() < newEvent.getTime())
+		{
+			auto firstEvent = 0;
+			while (this->events.at(firstEvent).getTime() > this->events.at(location).getTime()) firstEvent++;
+			std::swap(this->events.at(firstEvent), this->events.at(location));
+			return false;
+		}
+	}
+
+	auto iter = this->events.begin();
+	while (iter != this->events.end())
+	{
+		if (newEvent.getTime() >= (*iter).getTime()) break;
+		iter++;
+	}
+	this->events.emplace(iter, newEvent);
 	this->eventCount++;
+	return true;
 }
 
 void Circuit::setWire(size_t n, Wire* inWire)
@@ -100,7 +140,7 @@ void Circuit::printWires() const
 
 	for (auto w : this->wires)
 	{
-		if (w == nullptr) continue;
+		if (w == nullptr || w->getName() == "") continue;
 		w->printHistory(maxSize);
 	}
 }

@@ -26,14 +26,14 @@ public:
 	int getEventCount();
 	bool hasEvent() const { return !this->events.empty(); }
 	void setCircuitName(string newName);
-	void addEvent(Event& newEvent);
+	bool addEvent(Event& newEvent, bool justAdd = false);
 	void setWire(size_t n, Wire* inWire);
 	void addGate(Gate* g);
 	void printWires() const;
 
 private:
 	string name;
-	priority_queue<Event, vector<Event>, greater<Event>> events;
+	vector<Event> events;
 	vector<Wire*> wires;
 	vector<Gate*> gates;
 	int eventCount = 0;
