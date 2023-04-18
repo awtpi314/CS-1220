@@ -12,19 +12,22 @@ using namespace std;
 class Event
 {
 public:
-	Event(int time, WireValue value, Wire* wire);
+	Event(int time, WireValue value, Wire* wire, int number);
 
 	friend bool operator >(const Event& lhs, const Event& rhs);
+	friend bool operator <(const Event& lhs, const Event& rhs);
+	friend bool operator ==(const Event& lhs, const Event& rhs);
 
-	int getTime();
-	bool getValue();
-	Wire* getWire();
+	int getTime() const;
+	WireValue getValue() const;
+	Wire* getWire() const;
 	void print() const;
 
 private:
 	int time;
-	bool value;
+	WireValue value;
 	Wire* includedWire;
+	int number;
 };
 
 #endif // !

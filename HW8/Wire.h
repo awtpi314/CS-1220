@@ -20,11 +20,11 @@ class Gate;
 class Wire
 {
 public:
-	Wire(int i, string n = "", WireValue v = UNKNOWN, vector<Gate*> d = vector<Gate*>());
+	Wire(int i, string n = "", string type = "INPUT", WireValue v = UNKNOWN, vector<Gate*> d = vector<Gate*>());
 	~Wire();
 
-	void setValue(WireValue v, int t = -1);
-	void setHistory(WireValue h, int t = -1);
+	void setValue(WireValue v, size_t t = -1);
+	void setHistory(WireValue h, size_t t = -1);
 	void addGate(Gate* d);
 
 	WireValue getValue() const;
@@ -32,8 +32,10 @@ public:
 	int getIndex() const;
 	vector<Gate*> getDrives() const;
 	vector<WireValue> getHistory() const;
+	string getType() const;
 
 	void printHistory() const;
+	void printHistory(int length) const;
 
 
 private:
@@ -41,6 +43,7 @@ private:
 	string name;
 	vector<Gate*> drives;
 	int index;
+	string type;
 	vector<WireValue> history;
 };
 

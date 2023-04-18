@@ -23,12 +23,12 @@ public:
 	Wire* getWire(size_t n) const;
 	Wire* getWire(string s) const;
 	Gate* getGate(size_t n) const;
+	int getEventCount();
 	bool hasEvent() const { return !this->events.empty(); }
 	void setCircuitName(string newName);
 	void addEvent(Event& newEvent);
 	void setWire(size_t n, Wire* inWire);
 	void addGate(Gate* g);
-	void evaluateGates(int currentTime);
 	void printWires() const;
 
 private:
@@ -36,6 +36,7 @@ private:
 	priority_queue<Event, vector<Event>, greater<Event>> events;
 	vector<Wire*> wires;
 	vector<Gate*> gates;
+	int eventCount = 0;
 };
 
 #endif // !CIRCUIT_H

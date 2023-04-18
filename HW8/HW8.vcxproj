@@ -22,7 +22,6 @@
     <ClInclude Include="Circuit.h" />
     <ClInclude Include="Event.h" />
     <ClInclude Include="Gate.h" />
-    <ClInclude Include="Queue.h" />
     <ClInclude Include="Wire.h" />
   </ItemGroup>
   <ItemGroup>
@@ -30,7 +29,6 @@
     <ClCompile Include="Event.cpp" />
     <ClCompile Include="Gate.cpp" />
     <ClCompile Include="main.cpp" />
-    <ClCompile Include="Queue.cpp" />
     <ClCompile Include="Wire.cpp" />
   </ItemGroup>
   <PropertyGroup Label="Globals">

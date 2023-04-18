@@ -2,6 +2,8 @@
 #include <fstream>
 #include <sstream>
 
+#include <Windows.h>
+
 #include "Circuit.h"
 #include "Gate.h"
 #include "Wire.h"
@@ -81,7 +83,7 @@ Circuit* readInCircuit(Circuit* mainCircuit, ifstream& f) {
 			int id;
 			iss >> id;
 
-			mainCircuit->setWire(id, new Wire(id, name));
+			mainCircuit->setWire(id, new Wire(id, name, type));
 		}
 		else if (type == "NOT")
 		{
@@ -144,7 +146,7 @@ Circuit* readInVector(Circuit* mainCircuit, ifstream& inFS)
 		int value;
 		iss >> value;
 
-		Event e = Event(time, (WireValue)value, mainCircuit->getWire(wireName));
+		Event e = Event(time, (WireValue)value, mainCircuit->getWire(wireName), mainCircuit->getEventCount());
 		mainCircuit->addEvent(e);
 	}
 
@@ -178,7 +180,7 @@ int main(int argc, char* argv[])
 	}
 
 	ifstream circuitFile(circuitFileName);
-	
+
 	Circuit* mainCircuit = new Circuit();
 	readInCircuit(mainCircuit, circuitFile);
 
@@ -189,26 +191,39 @@ int main(int argc, char* argv[])
 
 	readInVector(mainCircuit, vectorFile);
 
-	while (mainCircuit->hasEvent()) 
+	COORD coord;
+	coord.X = 0;
+	coord.Y = 4;
+
+	COORD coord2;
+	coord2.X = 0;
+	coord2.Y = 10;
+
+	while (mainCircuit->hasEvent())
 	{
+		SetConsoleCursorPosition(GetStdHandle(STD_OUTPUT_HANDLE), coord);
+		mainCircuit->printWires();
 		Event e = mainCircuit->getNextEvent();
 		if (e.getTime() > 100) break;
-		e.print();
 		Wire* wireToChange = e.getWire();
 		wireToChange->setValue((WireValue)e.getValue(), e.getTime());
 		vector<Gate*> gates = wireToChange->getDrives();
-		for (auto g : gates) 
+		for (auto g : gates)
 		{
 			WireValue previous = g->getOutput()->getValue();
 			WireValue next = g->evaluate();
-			if (previous != next)
-			{
-				Event newEvent = Event(e.getTime() + g->getDelay(), next, g->getOutput());
-				mainCircuit->addEvent(newEvent);
-			}
+			Event newEvent = Event(e.getTime() + g->getDelay(), next, g->getOutput(), mainCircuit->getEventCount());
+			mainCircuit->addEvent(newEvent);
+
+			SetConsoleCursorPosition(GetStdHandle(STD_OUTPUT_HANDLE), coord2);
+			e.print();
+			cout << " -> ";
+			newEvent.print();
+			cout << endl;
 		}
 	}
 
+	SetConsoleCursorPosition(GetStdHandle(STD_OUTPUT_HANDLE), coord);
 	mainCircuit->printWires();
 
 	vectorFile.close();
