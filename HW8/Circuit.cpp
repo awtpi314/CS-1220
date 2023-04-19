@@ -1,3 +1,5 @@
+#include <sstream>
+
 #include "Circuit.h"
 
 using namespace std;
@@ -73,32 +75,18 @@ bool Circuit::addEvent(Event& newEvent, bool justAdd)
 {
 	if (!justAdd)
 	{
-		int location;
+		int location = this->events.size() - 1;
 		WireValue lastKnownValue = newEvent.getWire()->getValue();
-		for (location = this->events.size() - 1; location >= 0 && this->events.at(location).getTime() <= newEvent.getTime(); location--)
+		while (location >= 0 && this->events.at(location).getTime() <= newEvent.getTime())
 		{
 			if (this->events.at(location).getWire()->getIndex() == newEvent.getWire()->getIndex())
 			{
 				lastKnownValue = this->events.at(location).getValue();
-				continue;
 			}
-			if (this->events.at(location) == newEvent ||
-				(this->events.at(location).getTime() == newEvent.getTime() - 1 &&
-					this->events.at(location).getValue() == newEvent.getValue() &&
-					this->events.at(location).getWire()->getIndex() == newEvent.getWire()->getIndex()))
-			{
-				break;
-			}
+			location--;
 		}
 
 		if (lastKnownValue == newEvent.getValue()) return false;
-		if (location >= 0 && this->events.at(location).getTime() < newEvent.getTime())
-		{
-			auto firstEvent = 0;
-			while (this->events.at(firstEvent).getTime() > this->events.at(location).getTime()) firstEvent++;
-			std::swap(this->events.at(firstEvent), this->events.at(location));
-			return false;
-		}
 	}
 
 	auto iter = this->events.begin();
@@ -128,7 +116,27 @@ void Circuit::addGate(Gate* g)
 
 void Circuit::printWires() const
 {
-	int maxSize = 0;
+	cout << this->getWireDesc();
+}
+
+string Circuit::getWireDesc() const
+{
+	stringstream ss;
+
+	size_t maxSize = this->getMaxWireSize();
+
+	for (auto w : this->wires)
+	{
+		if (w == nullptr || w->getName() == "") continue;
+		ss << w->getHistoryPretty(maxSize);
+	}
+
+	return ss.str();
+}
+
+size_t Circuit::getMaxWireSize() const
+{
+	size_t maxSize = 0;
 	for (auto w : this->wires)
 	{
 		if (w == nullptr) continue;
@@ -137,10 +145,5 @@ void Circuit::printWires() const
 			maxSize = w->getHistory().size();
 		}
 	}
-
-	for (auto w : this->wires)
-	{
-		if (w == nullptr || w->getName() == "") continue;
-		w->printHistory(maxSize);
-	}
+	return maxSize;
 }

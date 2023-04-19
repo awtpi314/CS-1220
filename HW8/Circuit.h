@@ -30,6 +30,7 @@ public:
 	void setWire(size_t n, Wire* inWire);
 	void addGate(Gate* g);
 	void printWires() const;
+	string getWireDesc() const;
 
 private:
 	string name;
@@ -37,6 +38,8 @@ private:
 	vector<Wire*> wires;
 	vector<Gate*> gates;
 	int eventCount = 0;
+
+	size_t getMaxWireSize() const;
 };
 
 #endif // !CIRCUIT_H

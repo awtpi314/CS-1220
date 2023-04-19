@@ -36,6 +36,8 @@ public:
 
 	void printHistory() const;
 	void printHistory(int length) const;
+	string getHistoryPretty() const;
+	string getHistoryPretty(size_t length) const;
 
 
 private:

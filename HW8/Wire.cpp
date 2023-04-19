@@ -1,4 +1,5 @@
 #include <iostream>
+#include <sstream>
 
 #include "Wire.h"
 
@@ -80,35 +81,48 @@ void Wire::printHistory() const
 
 void Wire::printHistory(int length) const
 {
-	cout << this->name << "\t";
+	cout << this->getHistoryPretty(length);
+}
+
+string Wire::getHistoryPretty() const
+{
+	return this->getHistoryPretty(this->history.size());
+}
+
+string Wire::getHistoryPretty(size_t length) const
+{
+	stringstream ss;
+	ss << this->name << "\t";
 	for (auto dataPoint : this->history) {
 		switch (dataPoint)
 		{
 		case ON:
-			cout << "-";
+			ss << "-";
 			break;
 		case OFF:
-			cout << "_";
+			ss << "_";
 			break;
 		default:
-			cout << "X";
+			ss << "X";
 			break;
 		}
 	}
-	for (int i = this->history.size(); i < length; i++) 
+	for (int i = this->history.size(); i < length; i++)
 	{
 		switch (this->value)
 		{
 		case ON:
-			cout << "-";
+			ss << "-";
 			break;
 		case OFF:
-			cout << "_";
+			ss << "_";
 			break;
 		default:
-			cout << "X";
+			ss << "X";
 			break;
 		}
 	}
-	cout << endl;
+	ss << endl;
+	
+	return ss.str();
 }
