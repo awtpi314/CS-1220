@@ -22,14 +22,20 @@
     <ClInclude Include="Circuit.h" />
     <ClInclude Include="Event.h" />
     <ClInclude Include="Gate.h" />
+    <ClInclude Include="GUIClass.h" />
+    <ClInclude Include="SubGUIClass.h" />
     <ClInclude Include="Wire.h" />
+    <ClInclude Include="wxWidgetsApp.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Circuit.cpp" />
     <ClCompile Include="Event.cpp" />
     <ClCompile Include="Gate.cpp" />
+    <ClCompile Include="GUIClass.cpp" />
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="SubGUIClass.cpp" />
     <ClCompile Include="Wire.cpp" />
+    <ClCompile Include="wxWidgetsApp.cpp" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>16.0</VCProjectVersion>
@@ -83,6 +89,10 @@
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
+  <PropertyGroup Label="Vcpkg" Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <VcpkgInstalledDir>
+    </VcpkgInstalledDir>
+  </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
       <WarningLevel>Level3</WarningLevel>
