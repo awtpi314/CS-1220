@@ -27,12 +27,12 @@ string Circuit::getCircuitName() const
 
 Event Circuit::getNextEvent()
 {
-	Event e = this->events.back();
+	/*Event e = this->events.back();
 	this->events.pop_back();
-	return e;
-	/*Event retVal = this->events.top();
+	return e;*/
+	Event retVal = this->events.top();
 	this->events.pop();
-	return retVal;*/
+	return retVal;
 }
 
 Wire* Circuit::getWire(size_t n) const
@@ -63,7 +63,7 @@ Gate* Circuit::getGate(size_t n) const
 
 int Circuit::getEventCount()
 {
-	return this->eventCount;
+	return this->eventCount++;
 }
 
 void Circuit::setCircuitName(string newName)
@@ -71,33 +71,9 @@ void Circuit::setCircuitName(string newName)
 	this->name = newName;
 }
 
-bool Circuit::addEvent(Event& newEvent, bool justAdd)
+void Circuit::addEvent(Event& newEvent)
 {
-	if (!justAdd)
-	{
-		int location = this->events.size() - 1;
-		WireValue lastKnownValue = newEvent.getWire()->getValue();
-		while (location >= 0 && this->events.at(location).getTime() <= newEvent.getTime())
-		{
-			if (this->events.at(location).getWire()->getIndex() == newEvent.getWire()->getIndex())
-			{
-				lastKnownValue = this->events.at(location).getValue();
-			}
-			location--;
-		}
-
-		if (lastKnownValue == newEvent.getValue()) return false;
-	}
-
-	auto iter = this->events.begin();
-	while (iter != this->events.end())
-	{
-		if (newEvent.getTime() >= (*iter).getTime()) break;
-		iter++;
-	}
-	this->events.emplace(iter, newEvent);
-	this->eventCount++;
-	return true;
+	this->events.push(newEvent);
 }
 
 void Circuit::setWire(size_t n, Wire* inWire)

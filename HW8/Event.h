@@ -14,9 +14,9 @@ class Event
 public:
 	Event(int time, WireValue value, Wire* wire, int number);
 
-	friend bool operator >(const Event& lhs, const Event& rhs);
+	//friend bool operator >(const Event& lhs, const Event& rhs);
 	friend bool operator <(const Event& lhs, const Event& rhs);
-	friend bool operator ==(const Event& lhs, const Event& rhs);
+	//friend bool operator ==(const Event& lhs, const Event& rhs);
 
 	int getTime() const;
 	WireValue getValue() const;

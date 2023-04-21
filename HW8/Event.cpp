@@ -10,22 +10,26 @@ Event::Event(int time, WireValue value, Wire* wire, int number)
 	this->number = number;
 }
 
-bool operator >(const Event& lhs, const Event& rhs)
-{
-	return lhs.time > rhs.time;
-}
+//bool operator >(const Event& lhs, const Event& rhs)
+//{
+//	return lhs.time > rhs.time;
+//}
 
 bool operator<(const Event& lhs, const Event& rhs)
 {
-	return lhs.time < rhs.time;
+	if (lhs.time == rhs.time)
+	{
+		return lhs.number > rhs.number;
+	}
+	return lhs.time > rhs.time;
 }
 
-bool operator==(const Event& lhs, const Event& rhs)
-{
-	return lhs.includedWire->getIndex() == rhs.includedWire->getIndex() && 
-		lhs.time == rhs.time && 
-		lhs.value == rhs.value;
-}
+//bool operator==(const Event& lhs, const Event& rhs)
+//{
+//	return lhs.includedWire->getIndex() == rhs.includedWire->getIndex() && 
+//		lhs.time == rhs.time && 
+//		lhs.value == rhs.value;
+//}
 
 int Event::getTime() const
 {
