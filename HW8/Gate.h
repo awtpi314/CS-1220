@@ -5,6 +5,7 @@
 
 #include <vector>
 
+#include "Event.h"
 #include "Wire.h"
 
 using namespace std;

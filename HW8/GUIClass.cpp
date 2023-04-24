@@ -7,7 +7,7 @@
 
 #include "GUIClass.h"
 
-#include "res/shomperk.PNG.h"
+#include "shomperk.bmp.h"
 
 ///////////////////////////////////////////////////////////////////////////
 
@@ -88,6 +88,8 @@ GUIClass::GUIClass( wxWindow* parent, wxWindowID id, const wxString& title, cons
 	bSizer911->Add( vectorFileText, 0, wxALL, 5 );
 	
 	vectorFilePicker = new wxFilePickerCtrl( m_panel2, wxID_ANY, wxEmptyString, wxT("Select a file"), wxT("*.*"), wxDefaultPosition, wxDefaultSize, wxFLP_DEFAULT_STYLE );
+	vectorFilePicker->Enable( false );
+	
 	bSizer911->Add( vectorFilePicker, 0, wxALL, 5 );
 	
 	bSizer2->Add( bSizer911, 1, wxEXPAND, 5 );
@@ -107,9 +109,7 @@ GUIClass::GUIClass( wxWindow* parent, wxWindowID id, const wxString& title, cons
 	wxBoxSizer* bSizer18;
 	bSizer18 = new wxBoxSizer( wxVERTICAL );
 	
-	actionsTextBox = new wxTextCtrl( m_panel2, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, 0 );
-	actionsTextBox->Enable( false );
-	
+	actionsTextBox = new wxTextCtrl( m_panel2, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, wxTE_MULTILINE );
 	bSizer18->Add( actionsTextBox, 1, wxALL|wxEXPAND, 5 );
 	
 	bSizer2->Add( bSizer18, 1, wxEXPAND, 5 );
@@ -121,9 +121,7 @@ GUIClass::GUIClass( wxWindow* parent, wxWindowID id, const wxString& title, cons
 	wxBoxSizer* bSizer19;
 	bSizer19 = new wxBoxSizer( wxVERTICAL );
 	
-	queueTextBox = new wxTextCtrl( m_panel2, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, 0 );
-	queueTextBox->Enable( false );
-	
+	queueTextBox = new wxTextCtrl( m_panel2, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, wxTE_MULTILINE );
 	bSizer19->Add( queueTextBox, 1, wxALL|wxEXPAND, 5 );
 	
 	bSizer2->Add( bSizer19, 1, wxEXPAND, 5 );
@@ -135,9 +133,7 @@ GUIClass::GUIClass( wxWindow* parent, wxWindowID id, const wxString& title, cons
 	wxBoxSizer* bSizer181;
 	bSizer181 = new wxBoxSizer( wxVERTICAL );
 	
-	eventHistoryTextBox = new wxTextCtrl( m_panel2, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, 0 );
-	eventHistoryTextBox->Enable( false );
-	
+	eventHistoryTextBox = new wxTextCtrl( m_panel2, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, wxTE_MULTILINE );
 	bSizer181->Add( eventHistoryTextBox, 1, wxALL|wxEXPAND, 5 );
 	
 	bSizer2->Add( bSizer181, 1, wxEXPAND, 5 );
@@ -154,9 +150,7 @@ GUIClass::GUIClass( wxWindow* parent, wxWindowID id, const wxString& title, cons
 	traceText->Wrap( -1 );
 	bSizer23->Add( traceText, 0, wxALL|wxEXPAND, 5 );
 	
-	traceTextBox = new wxTextCtrl( m_panel2, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, 0 );
-	traceTextBox->Enable( false );
-	
+	traceTextBox = new wxTextCtrl( m_panel2, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, wxTE_MULTILINE );
 	bSizer23->Add( traceTextBox, 1, wxEXPAND, 5 );
 	
 	bSizer15->Add( bSizer23, 2, wxEXPAND, 5 );
@@ -164,8 +158,8 @@ GUIClass::GUIClass( wxWindow* parent, wxWindowID id, const wxString& title, cons
 	wxBoxSizer* bSizer24;
 	bSizer24 = new wxBoxSizer( wxVERTICAL );
 	
-	shomperk = new wxStaticBitmap( m_panel2, wxID_ANY, shomperk_PNG_to_wx_bitmap(), wxDefaultPosition, wxDefaultSize, 0 );
-	bSizer24->Add( shomperk, 1, wxALIGN_CENTER_HORIZONTAL|wxEXPAND, 5 );
+	shomperk = new wxStaticBitmap( m_panel2, wxID_ANY, shomperk_bmp_to_wx_bitmap(), wxDefaultPosition, wxDefaultSize, 0 );
+	bSizer24->Add( shomperk, 1, 0, 5 );
 	
 	bSizer15->Add( bSizer24, 1, wxEXPAND, 5 );
 	

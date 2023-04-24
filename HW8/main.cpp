@@ -229,8 +229,6 @@ int main(int argc, char* argv[])
 				WireValue previous = g->evaluate();
 				WireValue next = g->speculate(e);
 
-				wireToChange->setValue((WireValue)e.getValue(), e.getTime());
-
 				SetConsoleCursorPosition(GetStdHandle(STD_OUTPUT_HANDLE), coord2);
 				e.print();
 				cout << " -> ";
@@ -244,6 +242,8 @@ int main(int argc, char* argv[])
 
 				cout << endl;
 			}
+
+			wireToChange->setValue((WireValue)e.getValue(), e.getTime());
 		}
 
 		SetConsoleCursorPosition(GetStdHandle(STD_OUTPUT_HANDLE), coord);

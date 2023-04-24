@@ -48,5 +48,12 @@ Wire* Event::getWire() const
 
 void Event::print() const
 {
-	cout << "[" << this->includedWire->getIndex() << ", " << this->time << ", " << this->value << ", " << this->number << "]";
+	cout << getPretty();
+}
+
+string Event::getPretty() const
+{
+	stringstream ss("");
+	ss << "[" << this->includedWire->getIndex() << ", " << this->time << ", " << this->value << ", " << this->number << "]";
+	return ss.str();
 }

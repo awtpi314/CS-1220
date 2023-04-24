@@ -27,10 +27,8 @@ string Circuit::getCircuitName() const
 
 Event Circuit::getNextEvent()
 {
-	/*Event e = this->events.back();
-	this->events.pop_back();
-	return e;*/
 	Event retVal = this->events.top();
+	this->eventHistory.push_back(retVal);
 	this->events.pop();
 	return retVal;
 }
@@ -83,6 +81,7 @@ void Circuit::setWire(size_t n, Wire* inWire)
 		this->wires.resize(n + 1);
 	}
 	this->wires[n] = inWire;
+	this->wires[n]->setValue(UNKNOWN);
 }
 
 void Circuit::addGate(Gate* g)
@@ -108,6 +107,38 @@ string Circuit::getWireDesc() const
 	}
 
 	return ss.str();
+}
+
+string Circuit::getQueue() const
+{
+	priority_queue<Event> npq(this->events);
+	stringstream ss("");
+	while (!npq.empty())
+	{
+		ss << npq.top().getPretty() << endl;
+		npq.pop();
+	}
+	return ss.str();
+}
+
+string Circuit::getEventHistory()
+{
+	stringstream ss;
+	for (auto e : this->eventHistory)
+	{
+		ss << e.getPretty() << endl;
+	}
+	return ss.str();
+}
+
+void Circuit::resetCircuit()
+{
+	this->name = "";
+	this->events = priority_queue<Event>();
+	this->wires.clear();
+	this->gates.clear();
+	this->eventHistory.clear();
+	this->eventCount = 0;
 }
 
 size_t Circuit::getMaxWireSize() const

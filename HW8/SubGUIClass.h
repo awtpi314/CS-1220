@@ -28,7 +28,7 @@ public:
 	//// end generated class members
 
 private:
-	Circuit* mainCircuit;
+	Circuit* mainCircuit = new Circuit();
 
 };
 

@@ -37,7 +37,34 @@ void SubGUIClass::StartClick( wxCommandEvent& event )
 
 void SubGUIClass::NextStepClick( wxCommandEvent& event )
 {
-// TODO: Implement NextStepClick
+	if (!mainCircuit->hasEvent()) return;
+	Event e = mainCircuit->getNextEvent();
+	if (e.getTime() > 60) return;
+	Wire* wireToChange = e.getWire();
+	vector<Gate*> gates = wireToChange->getDrives();
+	for (auto g : gates)
+	{
+		mainCircuit->printWires();
+		WireValue previous = g->evaluate();
+		WireValue next = g->speculate(e);
+
+		stringstream ss("");
+		ss << e.getPretty() << " -> ";
+
+		if (previous != next)
+		{
+			Event newEvent = Event(e.getTime() + g->getDelay(), next, g->getOutput(), mainCircuit->getEventCount());
+			mainCircuit->addEvent(newEvent);
+			ss << newEvent.getPretty();
+		}
+
+		this->actionsTextBox->SetValue(ss.str());
+	}
+
+	wireToChange->setValue((WireValue)e.getValue(), e.getTime());
+	this->traceTextBox->SetValue(mainCircuit->getWireDesc());
+	this->queueTextBox->SetValue(mainCircuit->getQueue());
+	this->eventHistoryTextBox->SetValue(mainCircuit->getEventHistory());
 }
 
 void SubGUIClass::PauseClick( wxCommandEvent& event )
@@ -47,7 +74,9 @@ void SubGUIClass::PauseClick( wxCommandEvent& event )
 
 void SubGUIClass::SearchForVector( wxFileDirPickerEvent& event )
 {
-	ifstream f((string)this->circuitFilePicker->GetFileName().GetFullPath());
+	mainCircuit->resetCircuit();
+	string baseFileName = (string)this->circuitFilePicker->GetFileName().GetFullPath();
+	ifstream f(baseFileName);
 
 	string currentLine;
 	getline(f, currentLine);
@@ -110,4 +139,42 @@ void SubGUIClass::SearchForVector( wxFileDirPickerEvent& event )
 			mainCircuit->getWire(inputWire2)->addGate(newGate);
 		}
 	}
+
+	string vectorFileName = baseFileName.substr(0, baseFileName.length() - 4) + "_v.txt";
+	this->vectorFilePicker->SetFileName(wxFileName(vectorFileName));
+	ifstream inFS(vectorFileName);
+	
+	getline(inFS, currentLine);
+
+	while (getline(inFS, currentLine))
+	{
+		if (currentLine.length() == 0) break;
+		istringstream iss(currentLine);
+		string wireName;
+		iss >> wireName;
+		iss >> wireName;
+
+		int time;
+		iss >> time;
+		string stringValue;
+		iss >> stringValue;
+
+		WireValue value;
+		if (stringValue == "X")
+		{
+			value = UNKNOWN;
+		}
+		else
+		{
+			value = (WireValue)std::stoi(stringValue);
+		}
+
+		Event e = Event(time, value, mainCircuit->getWire(wireName), mainCircuit->getEventCount());
+		mainCircuit->addEvent(e);
+	}
+
+	this->traceTextBox->SetValue(mainCircuit->getWireDesc());
+	this->queueTextBox->SetValue(mainCircuit->getQueue());
+	this->actionsTextBox->SetValue("");
+	this->eventHistoryTextBox->SetValue("");
 }

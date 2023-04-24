@@ -4,6 +4,7 @@
 #define EVENT_H
 
 #include <iostream>
+#include <sstream>
 
 #include "Wire.h"
 
@@ -22,6 +23,7 @@ public:
 	WireValue getValue() const;
 	Wire* getWire() const;
 	void print() const;
+	string getPretty() const;
 
 private:
 	int time;

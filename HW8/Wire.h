@@ -23,9 +23,9 @@ public:
 	Wire(int i, string n = "", string type = "INPUT", WireValue v = UNKNOWN, vector<Gate*> d = vector<Gate*>());
 	~Wire();
 
-	void setValue(WireValue v, size_t t = -1);
+	void setValue(WireValue v, size_t t = 0);
 	void imagineValue(WireValue v);
-	void setHistory(WireValue h, size_t t = -1);
+	void setHistory(WireValue h, size_t t = 0);
 	void addGate(Gate* d);
 
 	WireValue getValue() const;

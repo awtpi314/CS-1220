@@ -31,12 +31,16 @@ public:
 	void addGate(Gate* g);
 	void printWires() const;
 	string getWireDesc() const;
+	string getQueue() const;
+	string getEventHistory();
+	void resetCircuit();
 
 private:
 	string name;
 	priority_queue<Event> events;
 	vector<Wire*> wires;
 	vector<Gate*> gates;
+	vector<Event> eventHistory;
 	int eventCount = 0;
 
 	size_t getMaxWireSize() const;
