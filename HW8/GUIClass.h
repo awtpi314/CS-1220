@@ -24,7 +24,6 @@
 #include <wx/sizer.h>
 #include <wx/stattext.h>
 #include <wx/filepicker.h>
-#include <wx/checkbox.h>
 #include <wx/textctrl.h>
 #include <wx/statbmp.h>
 #include <wx/panel.h>
@@ -49,12 +48,10 @@ class GUIClass : public wxFrame
 		wxPanel* m_panel2;
 		wxButton* startButton;
 		wxButton* nextStepButton;
-		wxButton* pauseButton;
 		wxStaticText* circuitFileText;
 		wxFilePickerCtrl* circuitFilePicker;
 		wxStaticText* vectorFileText;
 		wxFilePickerCtrl* vectorFilePicker;
-		wxCheckBox* singleStepBox;
 		wxStaticText* actionsText;
 		wxTextCtrl* actionsTextBox;
 		wxStaticText* queueText;
@@ -70,8 +67,8 @@ class GUIClass : public wxFrame
 		virtual void ShowAboutScreen( wxCommandEvent& event ) { event.Skip(); }
 		virtual void StartClick( wxCommandEvent& event ) { event.Skip(); }
 		virtual void NextStepClick( wxCommandEvent& event ) { event.Skip(); }
-		virtual void PauseClick( wxCommandEvent& event ) { event.Skip(); }
 		virtual void SearchForVector( wxFileDirPickerEvent& event ) { event.Skip(); }
+		virtual void VectorFileChange( wxFileDirPickerEvent& event ) { event.Skip(); }
 		
 	
 	public:

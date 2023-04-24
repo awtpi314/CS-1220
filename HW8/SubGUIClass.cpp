@@ -6,36 +6,14 @@
 #include <string>
 #include <sstream>
 
-SubGUIClass::SubGUIClass( wxWindow* parent )
-:
-GUIClass( parent )
+SubGUIClass::SubGUIClass(wxWindow* parent)
+	:
+	GUIClass(parent)
 {
 
 }
 
-void SubGUIClass::ExitClick( wxCommandEvent& event )
-{
-	this->Close();
-}
-
-void SubGUIClass::ShowAboutScreen( wxCommandEvent& event )
-{
-	wxMessageBox("THE MEGA AWESOME CIRCUIT SIMULATOR\n(c) 2023 Alexander Taylor and Elijah Payton", "MACS About", wxOK | wxICON_INFORMATION);
-}
-
-void SubGUIClass::StartClick( wxCommandEvent& event )
-{
-	if (this->singleStepBox->GetValue())
-	{
-
-	}
-	else
-	{
-
-	}
-}
-
-void SubGUIClass::NextStepClick( wxCommandEvent& event )
+void SubGUIClass::nextStep()
 {
 	if (!mainCircuit->hasEvent()) return;
 	Event e = mainCircuit->getNextEvent();
@@ -62,17 +40,38 @@ void SubGUIClass::NextStepClick( wxCommandEvent& event )
 	}
 
 	wireToChange->setValue((WireValue)e.getValue(), e.getTime());
+}
+
+void SubGUIClass::ExitClick(wxCommandEvent& event)
+{
+	this->Close();
+}
+
+void SubGUIClass::ShowAboutScreen(wxCommandEvent& event)
+{
+	wxMessageBox("THE MEGA AWESOME CIRCUIT SIMULATOR\n(c) 2023 Alexander Taylor and Elijah Payton", "MACS About", wxOK | wxICON_INFORMATION);
+}
+
+void SubGUIClass::StartClick(wxCommandEvent& event)
+{
+	while (mainCircuit->hasEvent()) 
+	{
+		this->nextStep();
+	}
 	this->traceTextBox->SetValue(mainCircuit->getWireDesc());
 	this->queueTextBox->SetValue(mainCircuit->getQueue());
 	this->eventHistoryTextBox->SetValue(mainCircuit->getEventHistory());
 }
 
-void SubGUIClass::PauseClick( wxCommandEvent& event )
+void SubGUIClass::NextStepClick(wxCommandEvent& event)
 {
-// TODO: Implement PauseClick
+	this->nextStep();
+	this->traceTextBox->SetValue(mainCircuit->getWireDesc());
+	this->queueTextBox->SetValue(mainCircuit->getQueue());
+	this->eventHistoryTextBox->SetValue(mainCircuit->getEventHistory());
 }
 
-void SubGUIClass::SearchForVector( wxFileDirPickerEvent& event )
+void SubGUIClass::SearchForVector(wxFileDirPickerEvent& event)
 {
 	mainCircuit->resetCircuit();
 	string baseFileName = (string)this->circuitFilePicker->GetFileName().GetFullPath();
@@ -142,8 +141,21 @@ void SubGUIClass::SearchForVector( wxFileDirPickerEvent& event )
 
 	string vectorFileName = baseFileName.substr(0, baseFileName.length() - 4) + "_v.txt";
 	this->vectorFilePicker->SetFileName(wxFileName(vectorFileName));
+
+	this->VectorFileChange(event);
+
+	this->traceTextBox->SetValue(mainCircuit->getWireDesc());
+	this->queueTextBox->SetValue(mainCircuit->getQueue());
+	this->actionsTextBox->SetValue("");
+	this->eventHistoryTextBox->SetValue("");
+}
+
+void SubGUIClass::VectorFileChange(wxFileDirPickerEvent& event)
+{
+	string currentLine;
+	string vectorFileName = (string)this->vectorFilePicker->GetFileName().GetFullPath();
 	ifstream inFS(vectorFileName);
-	
+
 	getline(inFS, currentLine);
 
 	while (getline(inFS, currentLine))
@@ -172,9 +184,4 @@ void SubGUIClass::SearchForVector( wxFileDirPickerEvent& event )
 		Event e = Event(time, value, mainCircuit->getWire(wireName), mainCircuit->getEventCount());
 		mainCircuit->addEvent(e);
 	}
-
-	this->traceTextBox->SetValue(mainCircuit->getWireDesc());
-	this->queueTextBox->SetValue(mainCircuit->getQueue());
-	this->actionsTextBox->SetValue("");
-	this->eventHistoryTextBox->SetValue("");
 }

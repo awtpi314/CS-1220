@@ -57,14 +57,11 @@ GUIClass::GUIClass( wxWindow* parent, wxWindowID id, const wxString& title, cons
 	wxBoxSizer* bSizer9;
 	bSizer9 = new wxBoxSizer( wxHORIZONTAL );
 	
-	startButton = new wxButton( m_panel2, wxID_ANY, wxT("Start"), wxDefaultPosition, wxDefaultSize, 0 );
+	startButton = new wxButton( m_panel2, wxID_ANY, wxT("Simulate"), wxDefaultPosition, wxDefaultSize, 0 );
 	bSizer9->Add( startButton, 1, wxALL, 5 );
 	
 	nextStepButton = new wxButton( m_panel2, wxID_ANY, wxT("Next Step"), wxDefaultPosition, wxDefaultSize, 0 );
 	bSizer9->Add( nextStepButton, 1, wxALL, 5 );
-	
-	pauseButton = new wxButton( m_panel2, wxID_ANY, wxT("Pause"), wxDefaultPosition, wxDefaultSize, 0 );
-	bSizer9->Add( pauseButton, 1, wxALL, 5 );
 	
 	bSizer2->Add( bSizer9, 1, wxEXPAND, 5 );
 	
@@ -88,19 +85,9 @@ GUIClass::GUIClass( wxWindow* parent, wxWindowID id, const wxString& title, cons
 	bSizer911->Add( vectorFileText, 0, wxALL, 5 );
 	
 	vectorFilePicker = new wxFilePickerCtrl( m_panel2, wxID_ANY, wxEmptyString, wxT("Select a file"), wxT("*.*"), wxDefaultPosition, wxDefaultSize, wxFLP_DEFAULT_STYLE );
-	vectorFilePicker->Enable( false );
-	
 	bSizer911->Add( vectorFilePicker, 0, wxALL, 5 );
 	
 	bSizer2->Add( bSizer911, 1, wxEXPAND, 5 );
-	
-	wxBoxSizer* bSizer25;
-	bSizer25 = new wxBoxSizer( wxVERTICAL );
-	
-	singleStepBox = new wxCheckBox( m_panel2, wxID_ANY, wxT("Single Step"), wxDefaultPosition, wxDefaultSize, 0 );
-	bSizer25->Add( singleStepBox, 1, wxALL|wxALIGN_CENTER_HORIZONTAL, 5 );
-	
-	bSizer2->Add( bSizer25, 0, wxEXPAND, 5 );
 	
 	actionsText = new wxStaticText( m_panel2, wxID_ANY, wxT("Actions:"), wxDefaultPosition, wxDefaultSize, 0 );
 	actionsText->Wrap( -1 );
@@ -180,8 +167,8 @@ GUIClass::GUIClass( wxWindow* parent, wxWindowID id, const wxString& title, cons
 	this->Connect( aboutMenu->GetId(), wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( GUIClass::ShowAboutScreen ) );
 	startButton->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( GUIClass::StartClick ), NULL, this );
 	nextStepButton->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( GUIClass::NextStepClick ), NULL, this );
-	pauseButton->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( GUIClass::PauseClick ), NULL, this );
 	circuitFilePicker->Connect( wxEVT_COMMAND_FILEPICKER_CHANGED, wxFileDirPickerEventHandler( GUIClass::SearchForVector ), NULL, this );
+	vectorFilePicker->Connect( wxEVT_COMMAND_FILEPICKER_CHANGED, wxFileDirPickerEventHandler( GUIClass::VectorFileChange ), NULL, this );
 }
 
 GUIClass::~GUIClass()
@@ -191,7 +178,7 @@ GUIClass::~GUIClass()
 	this->Disconnect( wxID_ANY, wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( GUIClass::ShowAboutScreen ) );
 	startButton->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( GUIClass::StartClick ), NULL, this );
 	nextStepButton->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( GUIClass::NextStepClick ), NULL, this );
-	pauseButton->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( GUIClass::PauseClick ), NULL, this );
 	circuitFilePicker->Disconnect( wxEVT_COMMAND_FILEPICKER_CHANGED, wxFileDirPickerEventHandler( GUIClass::SearchForVector ), NULL, this );
+	vectorFilePicker->Disconnect( wxEVT_COMMAND_FILEPICKER_CHANGED, wxFileDirPickerEventHandler( GUIClass::VectorFileChange ), NULL, this );
 	
 }
