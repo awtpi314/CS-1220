@@ -149,7 +149,7 @@ Circuit* readInVector(Circuit* mainCircuit, ifstream& inFS)
 		iss >> stringValue;
 
 		WireValue value;
-		if (stringValue == "X") 
+		if (stringValue == "X")
 		{
 			value = UNKNOWN;
 		}
@@ -159,7 +159,7 @@ Circuit* readInVector(Circuit* mainCircuit, ifstream& inFS)
 		}
 
 		Event e = Event(time, value, mainCircuit->getWire(wireName), mainCircuit->getEventCount());
-		mainCircuit->addEvent(e, true);
+		mainCircuit->addEvent(e);
 	}
 
 	return mainCircuit;
@@ -191,7 +191,7 @@ int main(int argc, char* argv[])
 		exit(1);
 	}
 
-	while (circuitFileName != ".txt") 
+	while (circuitFileName != ".txt")
 	{
 		ifstream circuitFile(circuitFileName);
 
@@ -221,24 +221,27 @@ int main(int argc, char* argv[])
 			Event e = mainCircuit->getNextEvent();
 			if (e.getTime() > 60) break;
 			Wire* wireToChange = e.getWire();
-			wireToChange->setValue((WireValue)e.getValue(), e.getTime());
-			SetConsoleCursorPosition(GetStdHandle(STD_OUTPUT_HANDLE), coord);
-			mainCircuit->printWires();
 			vector<Gate*> gates = wireToChange->getDrives();
 			for (auto g : gates)
 			{
-				WireValue previous = g->getOutput()->getValue();
-				WireValue next = g->evaluate();
-				Event newEvent = Event(e.getTime() + g->getDelay(), next, g->getOutput(), mainCircuit->getEventCount());
+				SetConsoleCursorPosition(GetStdHandle(STD_OUTPUT_HANDLE), coord);
+				mainCircuit->printWires();
+				WireValue previous = g->evaluate();
+				WireValue next = g->speculate(e);
+
+				wireToChange->setValue((WireValue)e.getValue(), e.getTime());
 
 				SetConsoleCursorPosition(GetStdHandle(STD_OUTPUT_HANDLE), coord2);
 				e.print();
 				cout << " -> ";
 
-				if (mainCircuit->addEvent(newEvent))
+				if (previous != next)
 				{
+					Event newEvent = Event(e.getTime() + g->getDelay(), next, g->getOutput(), mainCircuit->getEventCount());
+					mainCircuit->addEvent(newEvent);
 					newEvent.print();
 				}
+
 				cout << endl;
 			}
 		}

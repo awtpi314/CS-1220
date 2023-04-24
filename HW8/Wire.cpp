@@ -31,6 +31,11 @@ void Wire::setValue(WireValue v, size_t t)
 	this->value = v;
 }
 
+void Wire::imagineValue(WireValue v)
+{
+	this->value = v;
+}
+
 void Wire::setHistory(WireValue h, size_t t)
 {
 	if (this->history.size() <= t) {

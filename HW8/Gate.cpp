@@ -1,4 +1,5 @@
 #include "Gate.h"
+#include "Event.h"
 
 Gate::Gate(GateType t, int d, Wire* o, Wire* i1, Wire* i2)
 {
@@ -45,6 +46,15 @@ WireValue Gate::evaluate() const
 		return UNKNOWN;
 	}
 	return this->evaluate(this->type);
+}
+
+WireValue Gate::speculate(Event e) const
+{
+	WireValue oldValue = e.getWire()->getValue();
+	e.getWire()->imagineValue(e.getValue());
+	WireValue speculative = this->evaluate();
+	e.getWire()->imagineValue(oldValue);
+	return speculative;
 }
 
 WireValue Gate::evaluate(GateType g) const {

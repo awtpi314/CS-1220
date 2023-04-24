@@ -31,6 +31,7 @@ public:
 	Wire* getInput(int i) const;
 	Wire* getOutput() const;
 	WireValue evaluate() const;
+	WireValue speculate(Event e) const;
 
 
 private:

@@ -24,6 +24,7 @@ public:
 	~Wire();
 
 	void setValue(WireValue v, size_t t = -1);
+	void imagineValue(WireValue v);
 	void setHistory(WireValue h, size_t t = -1);
 	void addGate(Gate* d);
 
