@@ -39,7 +39,6 @@
 class GUIClass : public wxFrame 
 {
 	private:
-		wxTextCtrl* queueTextBox;
 	
 	protected:
 		wxMenuBar* topMenu;
@@ -59,11 +58,21 @@ class GUIClass : public wxFrame
 		wxStaticText* actionsText;
 		wxTextCtrl* actionsTextBox;
 		wxStaticText* queueText;
+		wxTextCtrl* queueTextBox;
 		wxStaticText* eventHistoryText;
 		wxTextCtrl* eventHistoryTextBox;
 		wxStaticText* traceText;
 		wxTextCtrl* traceTextBox;
 		wxStaticBitmap* shomperk;
+		
+		// Virtual event handlers, overide them in your derived class
+		virtual void ExitClick( wxCommandEvent& event ) { event.Skip(); }
+		virtual void ShowAboutScreen( wxCommandEvent& event ) { event.Skip(); }
+		virtual void StartClick( wxCommandEvent& event ) { event.Skip(); }
+		virtual void NextStepClick( wxCommandEvent& event ) { event.Skip(); }
+		virtual void PauseClick( wxCommandEvent& event ) { event.Skip(); }
+		virtual void SearchForVector( wxFileDirPickerEvent& event ) { event.Skip(); }
+		
 	
 	public:
 		

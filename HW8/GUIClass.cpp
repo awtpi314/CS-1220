@@ -7,6 +7,8 @@
 
 #include "GUIClass.h"
 
+#include "res/shomperk.PNG.h"
+
 ///////////////////////////////////////////////////////////////////////////
 
 GUIClass::GUIClass( wxWindow* parent, wxWindowID id, const wxString& title, const wxPoint& pos, const wxSize& size, long style ) : wxFrame( parent, id, title, pos, size, style )
@@ -106,6 +108,8 @@ GUIClass::GUIClass( wxWindow* parent, wxWindowID id, const wxString& title, cons
 	bSizer18 = new wxBoxSizer( wxVERTICAL );
 	
 	actionsTextBox = new wxTextCtrl( m_panel2, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, 0 );
+	actionsTextBox->Enable( false );
+	
 	bSizer18->Add( actionsTextBox, 1, wxALL|wxEXPAND, 5 );
 	
 	bSizer2->Add( bSizer18, 1, wxEXPAND, 5 );
@@ -118,6 +122,8 @@ GUIClass::GUIClass( wxWindow* parent, wxWindowID id, const wxString& title, cons
 	bSizer19 = new wxBoxSizer( wxVERTICAL );
 	
 	queueTextBox = new wxTextCtrl( m_panel2, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, 0 );
+	queueTextBox->Enable( false );
+	
 	bSizer19->Add( queueTextBox, 1, wxALL|wxEXPAND, 5 );
 	
 	bSizer2->Add( bSizer19, 1, wxEXPAND, 5 );
@@ -130,6 +136,8 @@ GUIClass::GUIClass( wxWindow* parent, wxWindowID id, const wxString& title, cons
 	bSizer181 = new wxBoxSizer( wxVERTICAL );
 	
 	eventHistoryTextBox = new wxTextCtrl( m_panel2, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, 0 );
+	eventHistoryTextBox->Enable( false );
+	
 	bSizer181->Add( eventHistoryTextBox, 1, wxALL|wxEXPAND, 5 );
 	
 	bSizer2->Add( bSizer181, 1, wxEXPAND, 5 );
@@ -144,18 +152,20 @@ GUIClass::GUIClass( wxWindow* parent, wxWindowID id, const wxString& title, cons
 	
 	traceText = new wxStaticText( m_panel2, wxID_ANY, wxT("Trace:"), wxDefaultPosition, wxDefaultSize, 0 );
 	traceText->Wrap( -1 );
-	bSizer23->Add( traceText, 0, wxALL, 5 );
+	bSizer23->Add( traceText, 0, wxALL|wxEXPAND, 5 );
 	
 	traceTextBox = new wxTextCtrl( m_panel2, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, 0 );
-	bSizer23->Add( traceTextBox, 1, wxALL|wxEXPAND, 5 );
+	traceTextBox->Enable( false );
+	
+	bSizer23->Add( traceTextBox, 1, wxEXPAND, 5 );
 	
 	bSizer15->Add( bSizer23, 2, wxEXPAND, 5 );
 	
 	wxBoxSizer* bSizer24;
 	bSizer24 = new wxBoxSizer( wxVERTICAL );
 	
-	shomperk = new wxStaticBitmap( m_panel2, wxID_ANY, wxNullBitmap, wxDefaultPosition, wxDefaultSize, 0 );
-	bSizer24->Add( shomperk, 1, wxALL|wxALIGN_CENTER_HORIZONTAL|wxEXPAND, 5 );
+	shomperk = new wxStaticBitmap( m_panel2, wxID_ANY, shomperk_PNG_to_wx_bitmap(), wxDefaultPosition, wxDefaultSize, 0 );
+	bSizer24->Add( shomperk, 1, wxALIGN_CENTER_HORIZONTAL|wxEXPAND, 5 );
 	
 	bSizer15->Add( bSizer24, 1, wxEXPAND, 5 );
 	
@@ -170,8 +180,24 @@ GUIClass::GUIClass( wxWindow* parent, wxWindowID id, const wxString& title, cons
 	this->Layout();
 	
 	this->Centre( wxBOTH );
+	
+	// Connect Events
+	this->Connect( exitButton->GetId(), wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( GUIClass::ExitClick ) );
+	this->Connect( aboutMenu->GetId(), wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( GUIClass::ShowAboutScreen ) );
+	startButton->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( GUIClass::StartClick ), NULL, this );
+	nextStepButton->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( GUIClass::NextStepClick ), NULL, this );
+	pauseButton->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( GUIClass::PauseClick ), NULL, this );
+	circuitFilePicker->Connect( wxEVT_COMMAND_FILEPICKER_CHANGED, wxFileDirPickerEventHandler( GUIClass::SearchForVector ), NULL, this );
 }
 
 GUIClass::~GUIClass()
 {
+	// Disconnect Events
+	this->Disconnect( wxID_EXIT, wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( GUIClass::ExitClick ) );
+	this->Disconnect( wxID_ANY, wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( GUIClass::ShowAboutScreen ) );
+	startButton->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( GUIClass::StartClick ), NULL, this );
+	nextStepButton->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( GUIClass::NextStepClick ), NULL, this );
+	pauseButton->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( GUIClass::PauseClick ), NULL, this );
+	circuitFilePicker->Disconnect( wxEVT_COMMAND_FILEPICKER_CHANGED, wxFileDirPickerEventHandler( GUIClass::SearchForVector ), NULL, this );
+	
 }
