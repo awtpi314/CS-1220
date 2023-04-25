@@ -36,7 +36,7 @@ public:
 	string getType() const;
 
 	void printHistory() const;
-	void printHistory(int length) const;
+	void printHistory(size_t length) const;
 	string getHistoryPretty() const;
 	string getHistoryPretty(size_t length) const;
 

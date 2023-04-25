@@ -36,6 +36,9 @@
     <ClInclude Include="SubGUIClass.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="shomperk.bmp.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Gate.cpp">

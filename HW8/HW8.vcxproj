@@ -23,6 +23,7 @@
     <ClInclude Include="Event.h" />
     <ClInclude Include="Gate.h" />
     <ClInclude Include="GUIClass.h" />
+    <ClInclude Include="shomperk.bmp.h" />
     <ClInclude Include="SubGUIClass.h" />
     <ClInclude Include="Wire.h" />
     <ClInclude Include="wxWidgetsApp.h" />

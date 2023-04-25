@@ -105,6 +105,37 @@ string Circuit::getWireDesc() const
 		if (w == nullptr || w->getName() == "") continue;
 		ss << w->getHistoryPretty(maxSize);
 	}
+	ss << endl << "\t";
+
+	for (size_t i = 0; i < maxSize; i++)
+	{
+		if (i % 10 == 0)
+		{
+			ss << "0";
+		}
+		else if (i % 5 == 0)
+		{
+			ss << "5";
+		}
+		else
+		{
+			ss << "-";
+		}
+	}
+	ss << endl << "\t";
+	for (size_t i = 0; i < maxSize; i++)
+	{
+		if (i % 10 == 0)
+		{
+			ss << i;
+			i += std::to_string(i).length() - 1;
+		}
+		else
+		{
+			ss << "-";
+		}
+	}
+	ss << endl;
 
 	return ss.str();
 }
@@ -124,7 +155,7 @@ string Circuit::getQueue() const
 string Circuit::getEventHistory()
 {
 	stringstream ss;
-	for (auto e : this->eventHistory)
+	for (Event& e : this->eventHistory)
 	{
 		ss << e.getPretty() << endl;
 	}

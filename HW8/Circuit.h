@@ -22,7 +22,6 @@ public:
 	Event getNextEvent();
 	Wire* getWire(size_t n) const;
 	Wire* getWire(string s) const;
-	Gate* getGate(size_t n) const;
 	int getEventCount();
 	bool hasEvent() const { return !this->events.empty(); }
 	void setCircuitName(string newName);

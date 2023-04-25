@@ -138,6 +138,9 @@ GUIClass::GUIClass( wxWindow* parent, wxWindowID id, const wxString& title, cons
 	bSizer23->Add( traceText, 0, wxALL|wxEXPAND, 5 );
 	
 	traceTextBox = new wxTextCtrl( m_panel2, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, wxTE_MULTILINE );
+	traceTextBox->SetFont(wxFontInfo(8).FaceName("Courier New"));
+	//traceTextBox->SetFont( wxFont( wxNORMAL_FONT->GetPointSize(), 76, 90, 90, false, wxEmptyString ) );
+	
 	bSizer23->Add( traceTextBox, 1, wxEXPAND, 5 );
 	
 	bSizer15->Add( bSizer23, 2, wxEXPAND, 5 );
