@@ -84,7 +84,7 @@ void Wire::printHistory() const
 	this->printHistory(this->history.size());
 }
 
-void Wire::printHistory(int length) const
+void Wire::printHistory(size_t length) const
 {
 	cout << this->getHistoryPretty(length);
 }

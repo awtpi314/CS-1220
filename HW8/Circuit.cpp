@@ -54,11 +54,6 @@ Wire* Circuit::getWire(string s) const
 	}
 }
 
-Gate* Circuit::getGate(size_t n) const
-{
-	return this->gates.at(n);
-}
-
 int Circuit::getEventCount()
 {
 	return this->eventCount++;
